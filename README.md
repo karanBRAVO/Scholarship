@@ -63,7 +63,9 @@ Before you begin, ensure you have the following dependencies installed:
 
 3. **Type in the URL**
 
-        http://localhost:[PORT]/
+        http://localhost:5500/
+
+   check the `endpoints` in the `App.jsx`
 
 ## API Usage
 
@@ -71,13 +73,17 @@ Before you begin, ensure you have the following dependencies installed:
 
         PORT=8090
         MONGO_URI="mongodb://0.0.0.0:27017/scholarhip"
-        JWT_SECRET_KEY=""
+        JWT_SECRET_KEY="any_key_phrase"
+        RAZORPAY_KEY="your_key"
+        RAZORPAY_SECRET="your_secret"
 
-`add the jwt secret key`
+
+`add the jwt secret key` `add the razorpay key` `add the razorpay secret`
 
 also create a `.env` file in `client` directory and paste this in it and replace the `PORT` with the value shown on the terminal when you run the server
 
-        VITE_API_BASE_URL="http://localhost:[PORT]/api"
+        VITE_API_BASE_URL="http://localhost:8090"
+        VITE_RAZORPAY_KEY="your_key"
 
 in case you want to create online database then get the free or paid version from the mongodb site
 
@@ -105,23 +111,23 @@ in case you want to create online database then get the free or paid version fro
 
     1. start the new request
 
-    2. make `GET`, `POST`, `PUT`, `DELETE` request to `http://localhost:[PORT]/api/[ENDPOINT]`
+    2. make `GET`, `POST`, `PUT`, `DELETE` request to `http://localhost:8090/api/[ENDPOINT]`
 
 ## Folder Structure
 
 The project structure is organized as follows:
 
         scholarship/
-        ├── public/
-        │   ├── index.html
+        ├── api/
+        │   ├── index.js
         │   └── ...
-        ├── src/
+        ├── client/
         │   ├── components/
         │   │   └── ...
-        │   ├── styles/
-        │   │   └── tailwind.css
-        │   ├── App.js
-        │   ├── index.js
+        │   ├── src/
+        │   │   └── ...
+        │   ├── index.html
+        │   ├── tailwind.config.js
         │   └── ...
         ├── .gitignore
         ├── package.json
@@ -141,6 +147,8 @@ The project structure is organized as follows:
 - `Mongodb`: a source-available cross-platform document-oriented database program
 
 - `Redux`: an open-source JavaScript library for managing and centralizing application state
+
+- `Razorpay`: used this to accept payments
 
 ## Features
 
