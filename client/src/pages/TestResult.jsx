@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { sendErrorMessage, sendInfoMessage } from "../utils/notifier.js";
 import Loading from "../Components/Loading.jsx";
+import { resetUserAnsState } from "../store/features/userAns.js";
 
 const TestResult = ({ TestName }) => {
   const { testName } = useParams();
@@ -35,6 +36,8 @@ const TestResult = ({ TestName }) => {
   };
 
   useEffect(() => {
+    dispatch(resetUserAnsState());
+
     const getVisitedQuestionsCount = (answersArray) => {
       let c = 0;
       answersArray.forEach((value, index) => {
@@ -59,9 +62,12 @@ const TestResult = ({ TestName }) => {
       let c = 0;
       questionsArray.forEach((question, index) => {
         if (
-          question.questionOption.find((option) => option.isCorrect)._id ===
-          answersArray.find((record) => record.questionId === question._id)
-            .optionId
+          String(
+            question.questionOption.find((option) => option.isCorrect)._id
+          ) ===
+          answersArray.find(
+            (record) => record.questionId === String(question._id)
+          ).optionId
         ) {
           c++;
         }
@@ -73,11 +79,11 @@ const TestResult = ({ TestName }) => {
       let c = 0;
       questionsArray.forEach((question) => {
         const markedOptionId = answersArray.find(
-          (record) => record.questionId === question._id
+          (record) => record.questionId === String(question._id)
         ).optionId;
-        const correctOptionId = question.questionOption.find(
-          (option) => option.isCorrect
-        )._id;
+        const correctOptionId = String(
+          question.questionOption.find((option) => option.isCorrect)._id
+        );
 
         if (markedOptionId !== null && markedOptionId !== correctOptionId) {
           c++;
@@ -123,6 +129,7 @@ const TestResult = ({ TestName }) => {
             });
           } else {
             sendInfoMessage("Error while getting the result");
+            navigate("/test-dashboard");
           }
         } catch (error) {
           sendErrorMessage("Error while getting result");
@@ -279,8 +286,7 @@ const TestResult = ({ TestName }) => {
                   {userTestResult.marksPerQuestion *
                     userTestResult.correctQuestions -
                     userTestResult.negativeMarking *
-                      userTestResult.incorrectQuestions *
-                      userTestResult.marksPerQuestion}
+                      userTestResult.incorrectQuestions}
                 </td>
               </tr>
               <tr>
@@ -412,7 +418,8 @@ const TestResult = ({ TestName }) => {
                         r="10"
                         fill={getQuestionColor(
                           answers.find(
-                            (record) => record.questionId === question._id
+                            (record) =>
+                              record.questionId === String(question._id)
                           )
                         )}
                       />
@@ -428,7 +435,8 @@ const TestResult = ({ TestName }) => {
                         color: getOptionColor(
                           option._id,
                           answers.find(
-                            (record) => record.questionId === question._id
+                            (record) =>
+                              record.questionId === String(question._id)
                           ).optionId,
                           option.isCorrect
                         ),

@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { sendErrorMessage, sendInfoMessage } from "../utils/notifier.js";
+import {
+  sendErrorMessage,
+  sendInfoMessage,
+  sendSuccessMessage,
+  sendWarningMessage,
+} from "../utils/notifier.js";
 import axios from "axios";
 import Loading from "../Components/Loading.jsx";
 import {
@@ -10,7 +15,11 @@ import {
   setVisitedFlag,
   setTimer,
   updateTimer,
+  incrementCloseAttempts,
+  resetUserAnsState,
+  setRecordedFlag,
 } from "../store/features/userAns.js";
+import { checkGreaterTime, getAvailableTime } from "../utils/ZuluFormat.js";
 
 const Quiz = ({ TestName }) => {
   const loginStatus = useSelector((state) => state.login);
@@ -20,48 +29,8 @@ const Quiz = ({ TestName }) => {
 
   const navigate = useNavigate();
 
-  const getTotalTimeInSeconds = (timeAvailable) => {
-    const h_m_s = timeAvailable.split(":");
-    let h = Number(h_m_s[0]);
-    let m = Number(h_m_s[1]);
-    let s = Number(h_m_s[2]);
-    return h * 3600 + m * 60 + s;
-  };
-
-  const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    const formattedTime = `${String(hrs).padStart(2, "0")}:${String(
-      mins
-    ).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-    return formattedTime;
-  };
-
-  const [questionNumber, setQuestionNumber] = useState(1);
-
   const [questions, setQuestions] = useState([]);
-
-  const moveToPreviousQuestion = () => {
-    if (questionNumber > 1) {
-      setQuestionNumber(questionNumber - 1);
-    }
-  };
-
-  const moveToNextQuestion = () => {
-    if (questionNumber < 15) {
-      setQuestionNumber(questionNumber + 1);
-    }
-  };
-
-  const moveToGivenQuestionNumber = (n) => {
-    setQuestionNumber(n);
-  };
-
-  const handleSubmitTest = () => {
-    navigate(`/${testName}-preview`);
-  };
+  const [questionNumber, setQuestionNumber] = useState(1);
 
   const colorPack = {
     attempted: "#00ff00",
@@ -69,19 +38,60 @@ const Quiz = ({ TestName }) => {
     default: "#94a3b8",
   };
 
+  // adding event listener to check for window change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        sendWarningMessage("Cannot change visibility of window");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  // checking for window close event
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+
+      dispatch(incrementCloseAttempts());
+      if (userSolutions.closeAttempts > 10) {
+        handleSubmitTest();
+      }
+
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleSubmitTest = () => {
+    navigate(`/${testName}-preview`);
+  };
+
   // start timer
   useEffect(() => {
-    const interval = setInterval(() => {
+    let interval;
+    interval = setInterval(() => {
       dispatch(updateTimer());
-    }, 1000);
 
-    if (userSolutions.timer == 0) {
-      handleSubmitTest();
-    }
+      if (userSolutions.timer == 0 || userSolutions.closeAttempts > 10) {
+        handleSubmitTest();
+      }
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
+  // getting the questions
   useEffect(() => {
     const getQuestions = async () => {
       const token = loginStatus.token;
@@ -100,7 +110,19 @@ const Quiz = ({ TestName }) => {
 
           if (res.data.success) {
             setQuestions(res.data.questions.question);
-            dispatch(setTestDetails(res.data.test));
+            const available_time = getAvailableTime(
+              new Date(),
+              res.data.test.timings.endTime
+            );
+            dispatch(
+              setTestDetails({
+                testName: res.data.test.testName,
+                totalQuestions: res.data.test.totalQuestions,
+                marksPerQuestion: res.data.test.marksPerQuestion,
+                negativeMarking: res.data.test.negativeMarking,
+                timeAvailable: available_time,
+              })
+            );
 
             if (userSolutions.solutions.length == 0) {
               sendInfoMessage("Test Started");
@@ -127,7 +149,7 @@ const Quiz = ({ TestName }) => {
 
               dispatch(
                 setTimer({
-                  time: getTotalTimeInSeconds(res.data.test.timeAvailable),
+                  time: getTotalTimeInSeconds(available_time),
                 })
               );
             }
@@ -138,11 +160,43 @@ const Quiz = ({ TestName }) => {
           sendErrorMessage("Cannot get questions");
         }
       } else {
-        sendInfoMessage("You are not authenticated");
+        if (!token) {
+          sendInfoMessage("You are not authenticated");
+        }
       }
     };
 
     getQuestions();
+  }, []);
+
+  // adding the record
+  useEffect(() => {
+    const addRecord = async () => {
+      try {
+        console.log(userSolutions);
+        const record_submit_status = await axios.post(
+          `/api/${testName}/submit-test`,
+          {
+            testName: userSolutions.testName,
+            solutions: userSolutions.solutions,
+          },
+          { headers: { Authorization: "Bearer " + loginStatus.token } }
+        );
+
+        if (!record_submit_status.data.success) {
+          setQuestions([]);
+          dispatch(resetUserAnsState());
+        } else {
+          dispatch(setRecordedFlag());
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (userSolutions.solutions.length > 0 && !userSolutions.recordedFlag) {
+      addRecord();
+    }
   }, []);
 
   useEffect(() => {
@@ -175,6 +229,41 @@ const Quiz = ({ TestName }) => {
         visitedFlag: true,
       })
     );
+  };
+
+  const getTotalTimeInSeconds = (timeAvailable) => {
+    const h_m_s = timeAvailable.split(":");
+    let h = Number(h_m_s[0]);
+    let m = Number(h_m_s[1]);
+    let s = Number(h_m_s[2]);
+    return h * 3600 + m * 60 + s;
+  };
+
+  const formatTime = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    const formattedTime = `${String(hrs).padStart(2, "0")}:${String(
+      mins
+    ).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    return formattedTime;
+  };
+
+  const moveToPreviousQuestion = () => {
+    if (questionNumber > 1) {
+      setQuestionNumber(questionNumber - 1);
+    }
+  };
+
+  const moveToNextQuestion = () => {
+    if (questionNumber < 15) {
+      setQuestionNumber(questionNumber + 1);
+    }
+  };
+
+  const moveToGivenQuestionNumber = (n) => {
+    setQuestionNumber(n);
   };
 
   const getCheckStatus = (questionId, optionId) => {
@@ -210,7 +299,6 @@ const Quiz = ({ TestName }) => {
 
   return (
     <>
-      {/* Main Container */}
       <div className="bg-gray-900 text-white p-4">
         {/* User Info Container */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">

@@ -32,30 +32,30 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-// export const adminSignup = async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-//     if (!username || !password) {
-//       const err = new Error(`Invalid username or password`);
-//       throw err;
-//     }
+export const adminSignup = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      const err = new Error(`Invalid username or password`);
+      throw err;
+    }
 
-//     const admins = await adminModel.find();
-//     if (admins.length == 1) {
-//       const err = new Error(`Invalid request`);
-//       throw err;
-//     }
+    const admins = await adminModel.find();
+    if (admins.length == 1) {
+      const err = new Error(`Invalid request`);
+      throw err;
+    }
 
-//     const hashedPassword = getHashedPassword(password);
+    const hashedPassword = getHashedPassword(password);
 
-//     const addAdmin = new adminModel({
-//       username,
-//       password: hashedPassword,
-//     });
-//     await addAdmin.save();
+    const addAdmin = new adminModel({
+      username,
+      password: hashedPassword,
+    });
+    await addAdmin.save();
 
-//     res.json({ success: true, message: "Sign Up Successfull" });
-//   } catch (error) {
-//     res.json({ success: false, error: error.message });
-//   }
-// };
+    res.json({ success: true, message: "Sign Up Successfull" });
+  } catch (error) {
+    res.json({ success: false, error: error.message });
+  }
+};

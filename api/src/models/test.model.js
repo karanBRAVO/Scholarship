@@ -22,8 +22,20 @@ const testSchema = new mongoose.Schema(
       required: true,
     },
     timeAvailable: {
-      type: String,  // hh:mm:ss
+      type: String, // hh:mm:ss
       required: true,
+    },
+    timings: {
+      startTime: {
+        // YYYY-MM-DDTHH:MM:SSZ
+        type: Date,
+        required: true,
+      },
+      endTime: {
+        // YYYY-MM-DDTHH:MM:SSZ
+        type: Date,
+        required: true,
+      },
     },
   },
   { timestamps: true }

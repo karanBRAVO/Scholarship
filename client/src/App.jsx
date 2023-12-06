@@ -10,6 +10,11 @@ import ErrorPage from "./pages/ErrorPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Private from "./pages/Private";
+import AdminLogin from "./Admin/AdminLogin";
+import AdminSignup from "./Admin/AdminSignup";
+import AdminDashboard from "./Admin/AdminDashboard";
+import AdminPrivate from "./Admin/AdminPrivate";
+import Home from "./pages/Home";
 
 const App = () => {
   const TestName = "EcoSysytem-Test";
@@ -17,8 +22,14 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin-signup" element={<AdminSignup />} />
+
         <Route element={<Private />}>
           <Route
             path="/test-dashboard"
@@ -39,6 +50,11 @@ const App = () => {
             element={<TestResult TestName={TestName} />}
           />
         </Route>
+
+        <Route element={<AdminPrivate />}>
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        </Route>
+
         <Route path="*" element={<ErrorPage />} />
       </Routes>
       <ToastContainer />

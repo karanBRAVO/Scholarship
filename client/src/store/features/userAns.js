@@ -8,6 +8,8 @@ const initialState = {
   timeAvailable: "",
   solutions: [],
   timer: -1,
+  closeAttempts: 0,
+  recordedFlag: false,
 };
 
 const checkPresence = (arr, key) => {
@@ -56,6 +58,12 @@ const userAnsSlice = createSlice({
     updateTimer: (state, action) => {
       state.timer -= 1;
     },
+    incrementCloseAttempts: (state, action) => {
+      state.closeAttempts++;
+    },
+    setRecordedFlag: (state, action) => {
+      state.recordedFlag = true;
+    },
     resetUserAnsState: (state) => {
       state.testName = "";
       state.totalQuestions = 0;
@@ -64,6 +72,8 @@ const userAnsSlice = createSlice({
       state.timeAvailable = "";
       state.solutions = [];
       state.timer = -1;
+      state.closeAttempts = 0;
+      state.recordedFlag = false;
     },
   },
 });
@@ -74,6 +84,8 @@ export const {
   setVisitedFlag,
   setTimer,
   updateTimer,
+  incrementCloseAttempts,
+  setRecordedFlag,
   resetUserAnsState,
 } = userAnsSlice.actions;
 

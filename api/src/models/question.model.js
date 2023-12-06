@@ -6,6 +6,7 @@ const questionSchema = new mongoose.Schema(
       type: String,
       ref: "testdetails",
       required: true,
+      unique: true,
     },
     question: {
       type: [

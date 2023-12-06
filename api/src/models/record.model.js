@@ -29,6 +29,10 @@ const recordSchema = new mongoose.Schema(
       ],
       required: true,
     },
+    marksObtained: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );

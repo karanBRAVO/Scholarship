@@ -147,6 +147,7 @@ The project structure is organized as follows:
 - Responsive design
 - User friendly
 - fully secured
+- support
 
 ## Contributing
 
