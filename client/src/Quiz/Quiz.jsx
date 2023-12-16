@@ -155,6 +155,7 @@ const Quiz = ({ TestName }) => {
             }
           } else {
             sendInfoMessage("Cannot get questions");
+            navigate("/test-dashboard");
           }
         } catch (error) {
           sendErrorMessage("Cannot get questions");
@@ -173,7 +174,6 @@ const Quiz = ({ TestName }) => {
   useEffect(() => {
     const addRecord = async () => {
       try {
-        console.log(userSolutions);
         const record_submit_status = await axios.post(
           `/api/${testName}/submit-test`,
           {
@@ -197,7 +197,7 @@ const Quiz = ({ TestName }) => {
     if (userSolutions.solutions.length > 0 && !userSolutions.recordedFlag) {
       addRecord();
     }
-  }, []);
+  }, [userSolutions.testName]);
 
   useEffect(() => {
     const changeVisitedFlag = () => {
@@ -299,7 +299,7 @@ const Quiz = ({ TestName }) => {
 
   return (
     <>
-      <div className="bg-gray-900 text-white p-4">
+      <div className="bg-gray-900 text-white p-4 min-h-screen">
         {/* User Info Container */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">
           <div className="font-semibold text-lg md:text-xl text-gray-200 flex items-center justify-center flex-col md:items-start">
@@ -342,7 +342,11 @@ const Quiz = ({ TestName }) => {
               <div className="bg-white p-6 rounded-md shadow-md w-full">
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    {questions[questionNumber - 1].questionText}
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: questions[questionNumber - 1].questionText,
+                      }}
+                    />
                   </h3>
                 </div>
                 <div className="mb-6">

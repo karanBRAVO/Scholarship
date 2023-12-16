@@ -166,8 +166,7 @@ const Admin_addQuestions = () => {
             >
               Question {questionIndex + 1}:
             </label>
-            <input
-              type="text"
+            <textarea
               id={`questionText-${questionIndex}`}
               name="questionText"
               autoComplete="off"
@@ -175,7 +174,9 @@ const Admin_addQuestions = () => {
               onChange={(e) => handleChange(e, questionIndex)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
               required
-            />
+              cols="30"
+              rows="10"
+            ></textarea>
 
             <div className="mt-4">
               {question.questionOption.map((option, optionIndex) => (

@@ -425,7 +425,9 @@ const TestResult = ({ TestName }) => {
                       />
                     </svg>
                   </span>
-                  {question.questionText}
+                  <span
+                    dangerouslySetInnerHTML={{ __html: question.questionText }}
+                  />
                 </h3>
                 <ul className="list-disc pl-6">
                   {question.questionOption.map((option, option_index) => (

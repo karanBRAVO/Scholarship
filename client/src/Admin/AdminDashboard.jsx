@@ -3,13 +3,14 @@ import { resetAdminData } from "../store/features/adminSlice.js";
 import Admin_addTest from "./Admin_addTest";
 import Admin_getTestDetails from "./Admin_getTestDetails.jsx";
 import Admin_addQuestions from "./Admin_addQuestions";
+import PreviewWindow from "./PreviewWindow.jsx";
 import { useState } from "react";
 
 const AdminDashboard = () => {
   const adminStatus = useSelector((state) => state.admin);
   const dispatch = useDispatch();
 
-  const [selectedTab, setSelectedTab] = useState("addQuestions");
+  const [selectedTab, setSelectedTab] = useState("addTest");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = (text) => {
@@ -29,9 +30,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen text-black">
+    <div className="flex flex-col md:flex-row min-h-screen text-black">
       {/* Sidebar */}
-      <aside className="w-64 bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600 flex flex-col items-center justify-between py-4 border-r border-white">
+      <aside className="w-full md:w-64 bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600 flex flex-col items-center justify-between py-4 border-r border-white">
         <div>
           <h2 className="text-2xl font-black mb-4 text-black">
             Admin Dashboard
@@ -72,11 +73,23 @@ const AdminDashboard = () => {
                 Get Test Details
               </span>
             </li>
+            <li
+              className={`rounded-md shadow-md p-2 cursor-pointer ${
+                selectedTab === "previewWindow" ? "bg-slate-400" : ""
+              }`}
+              onClick={() => {
+                handleClick("previewWindow");
+              }}
+            >
+              <span className="text-base text-black font-mono">
+                Preview Window
+              </span>
+            </li>
           </ul>
         </div>
         {/* Logout Button */}
         <button
-          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 animate-pulse"
+          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 animate-pulse fixed top-2 right-4"
           onClick={handleLogout}
         >
           Logout
@@ -95,7 +108,7 @@ const AdminDashboard = () => {
 
         <hr className="h-1 bg-black" />
 
-        <div className="max-h-[550px] overflow-auto">
+        <div className="max-h-screen overflow-auto">
           {isLoading ? (
             <div className="fixed z-10 top-1/2 left-1/2">
               <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500 border-r-2 border-b-2"></div>
@@ -106,8 +119,10 @@ const AdminDashboard = () => {
                 <Admin_addQuestions />
               ) : selectedTab === "addTest" ? (
                 <Admin_addTest />
-              ) : (
+              ) : selectedTab === "getTestDetails" ? (
                 <Admin_getTestDetails />
+              ) : (
+                <PreviewWindow />
               )}
             </div>
           )}
