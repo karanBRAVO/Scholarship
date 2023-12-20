@@ -24,3 +24,13 @@
 
 - ![6](https://github.com/karanBRAVO/Scholarship/assets/77043443/87b64b30-7e78-43ce-bbe4-6dc304a2366d)
 
+## Quiz Page
+
+- ![7](https://github.com/karanBRAVO/Scholarship/assets/77043443/307f95d3-09c0-4309-99f7-25001810338b)
+
+## Result Page
+
+- ![9](https://github.com/karanBRAVO/Scholarship/assets/77043443/2afae881-c92b-40ae-a4bb-d2cfb4cd9750)
+- ![8](https://github.com/karanBRAVO/Scholarship/assets/77043443/af79f539-5175-4b2d-9ee3-6237996dae39)
+
+
