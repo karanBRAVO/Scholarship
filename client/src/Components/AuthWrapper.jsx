@@ -20,7 +20,7 @@ const LoginSignUp = ({ jsxElement, endPoint, showLogin }) => {
         </p>
         <p className="text-xl my-5 text-white">
           price{" "}
-          <span className="px-3 text-black rounded bg-yellow-300">Free</span>
+          <span className="px-3 text-black rounded bg-yellow-300">{"₹"}50</span>
         </p>
         <p className="text-white font-bold text-xl">Scholarship up to 50%</p>
       </div>

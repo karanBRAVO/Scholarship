@@ -2,16 +2,30 @@ import Razorpay from "razorpay";
 import { nanoid } from "nanoid";
 import { orderModel } from "../models/orders.model.js";
 import { genObjectId } from "../utils/genId.mongodb.js";
+import { authModel } from "../models/auth.model.js";
 
 export const createOrder = async (req, res) => {
   try {
+    // getting the user's details
+    const { firstName, lastName, email, mobileNumber } = req.body;
+    const userFound = await authModel.findOne({
+      firstName,
+      lastName,
+      email,
+      mobileNumber,
+    });
+    if (userFound) {
+      const err = new Error("User already registered");
+      throw err;
+    }
+
     const razorpay = new Razorpay({
       key_id: process.env.RAZORPAY_KEY,
       key_secret: process.env.RAZORPAY_SECRET,
     });
 
     const payment_capture = 1;
-    const amount = 499;
+    const amount = 50;
     const currency = "INR";
     const order_id = nanoid();
     const options = {
