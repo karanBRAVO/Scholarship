@@ -153,6 +153,10 @@ The project structure is organized as follows:
 
 If you'd like to contribute to the project, please follow the contributing guidelines.
 
+## Preview of this Project
+
+look this page https://github.com/karanBRAVO/Scholarship/blob/main/Preview.md
+
 ## License
 
 This project is licensed under the `MIT` License - see the LICENSE file for details.
