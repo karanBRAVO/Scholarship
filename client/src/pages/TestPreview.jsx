@@ -129,7 +129,9 @@ const TestPreview = ({ TestName }) => {
     if (accessToken) {
       try {
         const res = await axios.put(
-          `/api/${testName}/update-submit-test`,
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/${testName}/update-submit-test`,
           {
             testName: userSolutions.testName,
             solutions: userSolutions.solutions,

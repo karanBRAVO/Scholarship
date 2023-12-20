@@ -106,7 +106,7 @@ const Admin_addQuestions = () => {
     if (checkFormDataValidity() && token.length > 0) {
       try {
         const res = await axios.post(
-          "/api/admin/add-question",
+          `${import.meta.env.VITE_API_BASE_URL}/api/admin/add-question`,
           {
             testName: formData.testName,
             question: [...formData.questions],

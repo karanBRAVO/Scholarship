@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import cors from "cors";
 import { connectToDatabase } from "./src/connection/db.conn.js";
 import authRouter from "./src/routes/auth.route.js";
 import adminRouter from "./src/routes/admin.route.js";
@@ -20,6 +21,16 @@ const app = express();
 
 // port number
 const PORT = process.env.PORT || 9090;
+
+// setting up cors
+app.use(
+  cors({
+    origin: process.env.ORIGIN, // specify the allowed origin
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
 
 // middlewares
 app.use(cookieParser());

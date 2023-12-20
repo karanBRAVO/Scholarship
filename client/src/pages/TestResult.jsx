@@ -97,9 +97,12 @@ const TestResult = ({ TestName }) => {
 
       if (token) {
         try {
-          const res = await axios.get(`/api/${testName}/get-result`, {
-            headers: { Authorization: "Bearer " + token },
-          });
+          const res = await axios.get(
+            `${import.meta.env.VITE_API_BASE_URL}/api/${testName}/get-result`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
 
           if (res.data.success) {
             setAnswers(res.data.data.ans);

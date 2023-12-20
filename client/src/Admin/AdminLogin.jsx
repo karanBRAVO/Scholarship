@@ -26,10 +26,13 @@ const AdminLogin = () => {
 
     if (username.length > 0 && password.length > 0) {
       try {
-        const res = await axios.post("/api/admin/login", {
-          username,
-          password,
-        });
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/admin/login`,
+          {
+            username,
+            password,
+          }
+        );
 
         if (res.data.success) {
           sendSuccessMessage("Successfully Logged in!");

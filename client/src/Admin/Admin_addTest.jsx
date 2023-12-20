@@ -90,7 +90,7 @@ const Admin_addTest = () => {
       if (checkDataValidity() && token.length > 0) {
         try {
           const res = await axios.post(
-            "/api/admin/add-test-details",
+            `${import.meta.env.VITE_API_BASE_URL}/api/admin/add-test-details`,
             {
               testName: formData.testName,
               totalQuestions: formData.totalQuestions,

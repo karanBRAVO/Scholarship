@@ -26,10 +26,13 @@ const AdminSignup = () => {
 
     if (username && password) {
       try {
-        const res = await axios.post("/api/admin/register", {
-          username,
-          password,
-        });
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/admin/register`,
+          {
+            username,
+            password,
+          }
+        );
 
         if (res.data.success) {
           sendSuccessMessage("Successfully registered");

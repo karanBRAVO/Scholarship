@@ -19,6 +19,8 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -57,10 +59,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       if (validateForm()) {
-        const res = await axios.post("/api/user-login", formData);
+        const res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/user-login`,
+          formData
+        );
         if (res.data.success) {
           sendSuccessMessage(res.data.message);
           const userData = res.data.userData;
@@ -84,6 +90,8 @@ const Login = () => {
     } catch (error) {
       sendErrorMessage("Form Validation Failed");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -119,9 +127,10 @@ const Login = () => {
       <div className="text-center mt-3">
         <button
           type="submit"
-          className="bg-blue-500 m-auto p-2 text-xl text-white rounded-xl"
+          disabled={loading}
+          className="bg-blue-500 m-auto p-2 text-xl text-white rounded-xl disabled:cursor-progress disabled:bg-blue-300"
         >
-          Login
+          {loading ? <span>Logging in...</span> : <span>Login</span>}
         </button>
       </div>
     </form>

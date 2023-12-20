@@ -24,9 +24,14 @@ const Admin_getTestDetails = () => {
     const token = adminStatus.token;
     if (testName.length > 0 && token.length > 0) {
       try {
-        const res = await axios.get(`/api/admin/get-test-details/${testName}`, {
-          headers: { Authorization: "Bearer " + token },
-        });
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/admin/get-test-details/${testName}`,
+          {
+            headers: { Authorization: "Bearer " + token },
+          }
+        );
 
         if (res.data.success) {
           sendSuccessMessage("Details fetched successfully");

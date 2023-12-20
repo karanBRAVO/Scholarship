@@ -93,7 +93,9 @@ const Register = () => {
       }
 
       const res = await axios.post(
-        "/api/payment-gateway/create-order/quiz-app",
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/payment-gateway/create-order/quiz-app`,
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -157,7 +159,10 @@ const Register = () => {
         paymentSignature: checkout_result.razorpay_signature,
         userId: userId,
       };
-      const res = await axios.post("/api/user-signup", data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/user-signup`,
+        data
+      );
 
       if (res.data.success) {
         sendSuccessMessage(res.data.message);

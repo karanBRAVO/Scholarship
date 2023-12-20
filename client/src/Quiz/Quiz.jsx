@@ -99,7 +99,7 @@ const Quiz = ({ TestName }) => {
       if (testName && token) {
         try {
           const res = await axios.post(
-            "/api/get-questions",
+            `${import.meta.env.VITE_API_BASE_URL}/api/get-questions`,
             { testName },
             {
               headers: {
@@ -175,7 +175,7 @@ const Quiz = ({ TestName }) => {
     const addRecord = async () => {
       try {
         const record_submit_status = await axios.post(
-          `/api/${testName}/submit-test`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/${testName}/submit-test`,
           {
             testName: userSolutions.testName,
             solutions: userSolutions.solutions,
@@ -257,7 +257,7 @@ const Quiz = ({ TestName }) => {
   };
 
   const moveToNextQuestion = () => {
-    if (questionNumber < 15) {
+    if (questionNumber < questions.length) {
       setQuestionNumber(questionNumber + 1);
     }
   };
