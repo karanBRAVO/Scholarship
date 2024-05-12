@@ -185,8 +185,8 @@ const TestDashboard = ({ TestName }) => {
 
             <div className="text-sm mt-6 p-4 flex flex-col gap-4">
               <p className="text-green-400 font-semibold">
-                Dnyanankur Publication {" > "} Test Center {" > "} Mock Test{" "}
-                {" > "} Test Details
+                KY Publication {" > "} Test Center {" > "} Mock Test {" > "}{" "}
+                Test Details
               </p>
               <p className="font-bold text-lg">Test Descriptions</p>
 

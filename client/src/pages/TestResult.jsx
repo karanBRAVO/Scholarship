@@ -226,7 +226,7 @@ const TestResult = ({ TestName }) => {
 
       <div className="text-xs mt-10 p-2 flex flex-col gap-2 text-gray-800 dark:text-gray-200">
         <p className="text-gray-600 dark:text-gray-300 font-semibold">
-          Dnyanankur Publication {" > "} Test Center {" > "} Mock Test {" > "}
+          KY Publication {" > "} Test Center {" > "} Mock Test {" > "}
           Test Details
         </p>
         <p className="font-bold text-base">Test Details</p>

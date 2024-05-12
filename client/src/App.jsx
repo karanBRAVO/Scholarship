@@ -17,7 +17,7 @@ import AdminPrivate from "./Admin/AdminPrivate";
 import Home from "./pages/Home";
 
 const App = () => {
-  const TestName = "EcoSysytem-Test";
+  const TestName = "KY-Test";
 
   return (
     <BrowserRouter>
